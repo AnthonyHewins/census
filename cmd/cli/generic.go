@@ -8,10 +8,11 @@ import (
 	"github.com/AnthonyHewins/census"
 )
 
-func genericQuery(path string, params string) {
+func genericQuery(path string, formPath string) {
 	form := url.Values{}
 
-	if params != "" {
+	if formPath != "" {
+		params := readFile(formPath)
 		var mapObj map[string]interface{}
 
 		if err := json.Unmarshal([]byte(params), &mapObj); err != nil {
@@ -28,5 +29,5 @@ func genericQuery(path string, params string) {
 		log.Fatalln(err)
 	}
 
-	fmt.Println(string(resp))
+	fmt.Println(string(resp)......)
 }

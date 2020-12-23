@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 )
-// https://api.census.gov/data/2019/acs/acs1/subject?get=NAME,S0101_C01_001E&for=new%20england%20city%20and%20town%20area:71650
-func ACS(year int, interval int8, f *Form) ([]byte, error) {
+
+func ACS(year int, interval int8, f *Form) ([][]interface{}, error) {
 	if year < 2005 || year > time.Now().Year() {
 		return nil, fmt.Errorf("year must be greater than 2005 and not in the future, got %v", year)
 	}

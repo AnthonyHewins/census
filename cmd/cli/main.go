@@ -39,20 +39,24 @@ where COMMAND expands to one of the following, matching best as possible first b
                                 be structured like below. Different fields are required depending on the endpoint.
 
                                 {
-                                    // What fields to get
+                                    // The key to use. Alternatively, use $CENSUS_API_KEY
+                                    "key": "your-api-key",
+
+                                    // What fields to get, a string array
                                     "get": ["NAME"],
 
                                     // predicates to filter on
                                     "predicate": {
-                                        "NAME": 1 // NAME must equal 1
+                                        "NAME": [1, 2] // NAME must equal 1 or 2
+                                        "FIELD": 12    // FIELD must equal 12
                                     },
 
-                                    // Geography fields. Supports abbreviation (alpha code) by state, e.g. AL for Alabama
+                                    // Geography fields. You'll want to use FIPS codes:
                                     // https://en.wikipedia.org/wiki/Federal_Information_Processing_Standard_state_code
                                     // Since the census API is complex, if this input is a string and cannot be parsed
                                     // it will just be passed off to the census API in case you have a complex query you
                                     // want to use.
-                                    "for": "AL",
+                                    "for": 0,
                                     "in": "", // restrict at areas smaller than state level
 
                                     // Require data is exactly on this time (follow this formatting).

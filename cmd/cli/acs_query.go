@@ -14,10 +14,7 @@ import (
 func acsQuery(yearStr, intervalStr, jsonFile string) {
 	year := strToInt(yearStr)
 	interval := strToInt(intervalStr)
-	buf, err := ioutil.ReadFile(jsonFile)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	buf := readFile(jsonFile)
 
 	var f census.Form
 	if err := json.Unmarshal(buf, &f); err != nil {
@@ -31,7 +28,8 @@ func acsQuery(yearStr, intervalStr, jsonFile string) {
 		log.Fatalln(err)
 	}
 
-	fmt.Println(string(resp))
+	// 2D slice interface{}, use ... twice
+	fmt.Println(string(resp)......)
 }
 
 func strToInt(s string) int {
@@ -42,4 +40,13 @@ func strToInt(s string) int {
 	}
 
 	return int(i)
+}
+
+func readFile(name string) []byte {
+	buf, err := ioutil.ReadFile(jsonFile)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return buf
 }
