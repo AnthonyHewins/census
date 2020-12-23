@@ -29,5 +29,5 @@ func genericQuery(path string, formPath string) {
 		log.Fatalln(err)
 	}
 
-	fmt.Println(string(resp)......)
+	printAsJson(resp)
 }

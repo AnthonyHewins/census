@@ -3,10 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
-	"strconv"
 
 	"github.com/AnthonyHewins/census"
 )
@@ -29,24 +27,5 @@ func acsQuery(yearStr, intervalStr, jsonFile string) {
 	}
 
 	// 2D slice interface{}, use ... twice
-	fmt.Println(string(resp)......)
-}
-
-func strToInt(s string) int {
-	i, err := strconv.ParseInt(s, 10, 32)
-
-	if err != nil {
-		help(1, "argument must be a number, got:", s)
-	}
-
-	return int(i)
-}
-
-func readFile(name string) []byte {
-	buf, err := ioutil.ReadFile(jsonFile)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	return buf
+	printAsJson(resp)
 }
