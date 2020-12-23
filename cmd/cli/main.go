@@ -1,11 +1,11 @@
 package main
 
 import (
-	"os"
-	"fmt"
 	"encoding/json"
-	"net/url"
+	"fmt"
 	"log"
+	"net/url"
+	"os"
 
 	"github.com/AnthonyHewins/census"
 )
@@ -32,8 +32,8 @@ func buildQuery(path string, params string) {
 
 	if params != "" {
 		var mapObj map[string]interface{}
-		err := json.Unmarshal([]byte(params), &mapObj)
-		if err != nil {
+
+		if err := json.Unmarshal([]byte(params), &mapObj); err != nil {
 			log.Fatalln(err)
 		}
 
@@ -42,7 +42,12 @@ func buildQuery(path string, params string) {
 		}
 	}
 
-	fmt.Println(census.Query(path, form))
+	resp, err := census.Query(path, form)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	fmt.Println(string(resp))
 }
 
 const helpText = `usage: census COMMAND

@@ -1,8 +1,7 @@
-package core
+package census
 
 import (
 	"fmt"
-	"encoding/json"
 	"io/ioutil"
 	"net/url"
 	"net/http"
@@ -10,15 +9,15 @@ import (
 
 const endpoint = "https://api.census.gov/data"
 
-func Query(path string, params url.Values) (map[string]interface{}, error) {
-	resp, err := http.PostForm(fmt.Sprintf("%v%v", endpoint, path), params)
+func Query(path string, params url.Values) ([]byte, error) {
+	resp, err := http.Get(
+		fmt.Sprintf("%v%v?%v", endpoint, path, params.Encode()),
+	)
 
-	defer resp.Body.Close()
-	buf, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	var jsonObj map[string]interface{}
-	return jsonObj, json.Unmarshal(buf, &jsonObj)
+	defer resp.Body.Close()
+	return ioutil.ReadAll(resp.Body)
 }
