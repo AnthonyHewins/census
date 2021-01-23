@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/AnthonyHewins/census"
@@ -11,7 +10,7 @@ import (
 
 func acsQuery(yearStr, intervalStr, jsonFile string) {
 	year := strToInt(yearStr)
-	interval := strToInt(intervalStr)
+	interval := parseInterval(intervalStr )
 	buf := readFile(jsonFile)
 
 	var f census.Form
@@ -21,11 +20,21 @@ func acsQuery(yearStr, intervalStr, jsonFile string) {
 		os.Exit(1)
 	}
 
-	resp, err := census.ACS(year, int8(interval), &f)
+	resp, err := census.ACS(year, interval, &f)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println("Error querying the census API:")
+		fmt.Println(err)
+		os.Exit(1)
 	}
 
-	// 2D slice interface{}, use ... twice
 	printAsJson(resp)
+}
+
+func parseInterval(interval string) census.ACSInterval {
+	switch interval {
+	case "se", "supplemental":
+		return census.ACSOneYearSupp
+	default:
+		return census.ACSInterval(strToInt(interval))
+	}
 }

@@ -5,14 +5,30 @@ import (
 	"time"
 )
 
-func ACS(year int, interval int8, f *Form) ([][]interface{}, error) {
+type ACSInterval int8
+
+const (
+	ACSOneYearSupp ACSInterval = -1
+
+	ACSOneYear   ACSInterval = 1
+	ACSThreeYear ACSInterval = 3
+	ACSFiveYear  ACSInterval = 5
+)
+
+// ACS hits one of the American Community Survey endpoints.
+// `year` specifies what year, `interval` specifies the interval the survey is taken,
+// and `f` is a pointer to the `Form` object.
+func ACS(year int, interval ACSInterval, f *Form) ([][]interface{}, error) {
 	if year < 2005 || year > time.Now().Year() {
 		return nil, fmt.Errorf("year must be greater than 2005 and not in the future, got %v", year)
 	}
 
-	if interval != 1 && interval != 3 && interval != 5 {
-		return nil, fmt.Errorf("acs surveys are 1, 3, and 5 year intervals, but got %v for interval argument", interval)
+	var path string
+	if interval < 0 {
+		path = fmt.Sprintf("/%v/acs/acsse", year)
+	} else {
+		path = fmt.Sprintf("/%v/acs/acs%v", year, interval)
 	}
 
-	return Query(fmt.Sprintf("/%v/acs/acs%v", year, interval), f.toValues())
+	return Query(path, f)
 }
